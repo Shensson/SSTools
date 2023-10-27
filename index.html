@@ -2,94 +2,48 @@
 <html>
 <head>
     <title>Refund Calculator</title>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Refund Calculator</h1>
-    <p>Enter the full breakdown:</p>
-    <textarea id="breakdown" rows="4" cols="50"></textarea>
-    <p>Refund Type:</p>
-    <select id="refundType">
-        <option value="tax">Tax Refund</option>
-        <option value="normal">Normal Refund</option>
-    </select>
-    <p>Penalty Amount (if applicable):</p>
-    <input type="number" id="penaltyInput">
-    <button onclick="calculateRefund()">Calculate Refund</button>
-    <h2>Refundable Taxes Breakdown:</h2>
-    <pre id="refundableTaxes"></pre>
-    <h2>Non-Refundable Taxes Breakdown:</h2>
-    <pre id="nonRefundableTaxes"></pre>
-    <h2>Refund Amount:</h2>
-    <p id="refundAmount"></p>
+    <nav>
+        <div class="nav-body">
+            <ul style="text-decoration: none; list-style: none; padding: 0;" class="menu">
+                <li><a href="ref-calc"><img style="width: 40px; height: 40px;" src="calculator-svgrepo-com.svg" alt=""></a></li>
+                <li>$D</li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+        <div class="warning">
+            <h2 style="color: #3D5A80; text-align: center;">Do not trust this tool fully, use it as an aproximate, and remember to always double check!</h2>
+        </div>
+        <div id="ref-calc" class="refund-calculator">
+            <h1>Refund Calculator</h1>
+            <p>Refund Type:</p>
+            <select id="refundType">
+            <option value="tax">Tax Refund</option>
+            <option value="normal">Normal Refund</option>
+            <option disabled value="partial">Partial Refund</option>
+            </select>
+            <p>Enter *LF</p>
+            <textarea id="breakdown" rows="10" cols="60" placeholder="FARE USD 478.00 TAX 5.60AY TAX 39.40US TAX 3.96XA TAX 4.50XF TAX 7.00XY TAX 6.11YC TAX 30.20JD TAX 2.10OG TAX 8.20QV TAX 400.00YQ TOT USD 985.07"></textarea>
+            <p style="padding: 5px 0px;">Penalty Amount (if applicable):</p>
+            <input style="height: 29px; padding: 0; border: 0;" type="number" id="penaltyInput">
+            <button id="calculate" onclick="calculateRefund()">Calculate Refund</button>
+            <h2>Refundable Taxes Breakdown:</h2>
+            <pre style="font-size: 16px; font-weight: 700;" id="refundableTaxes"></pre>
+            <h2>Non-Refundable Taxes Breakdown:</h2>
+            <pre style="font-size: 16px; font-weight: 700;" id="nonRefundableTaxes"></pre>
+            <p style="font-size: 24px; font-weight: 700;" id="refundAmount"></p>
+        </div>
+    </main>
 
     <script>
-        var nonRefundableTaxCodesForTaxRefund = ["YQ", "YR", "US", "XF", "ZP"];
-        var nonRefundableTaxCodesForNormalRefund = ["PI", "EQ", "E2", "ED", "L8", "O7", "I6", "N7", "N9", "PE", "CR", "BU", "DI", "FV", "FW", "BZ", "XL", "PH", "E3", "PA", "OU", "K3", "J9", "ZP"];
-
-        function calculateRefund() {
-            // Get the breakdown from the user input
-            var breakdown = document.getElementById("breakdown").value;
-
-            // Split the breakdown into individual items
-            var items = breakdown.split(/\s+/);
-
-            // Initialize refund amount
-            var refundAmount = 0.0;
-
-            // Initialize refundable and non-refundable tax breakdowns
-            var refundableTaxes = '';
-            var nonRefundableTaxes = '';
-
-            // Get the refund type
-            var refundType = document.getElementById("refundType").value;
-
-            // Find the fare amount
-            var fareAmount = 0.0;
-            for (var i = 0; i < items.length; i++) {
-                if (items[i] === "FARE") {
-                    var amount = parseFloat(items[i + 2]);
-
-                    if (!isNaN(amount)) {
-                        fareAmount = amount;
-                        break;
-                    }
-                }
-            }
-
-            // Get the penalty input
-            var penaltyInput = document.getElementById("penaltyInput");
-            var penaltyAmount = parseFloat(penaltyInput.value) || 0;
-
-            // Calculate the refund based on the refund type and categorize taxes
-            for (var i = 0; i < items.length; i++) {
-                if (items[i] === "TAX") {
-                    var taxCode = items[i + 1].slice(-2); // Extract the last two characters as the tax code
-                    var amount = parseFloat(items[i + 1]);
-
-                    if (!isNaN(amount) && taxCode) {
-                        if ((refundType === "tax" && nonRefundableTaxCodesForTaxRefund.includes(taxCode)) ||
-                            (refundType === "normal" && nonRefundableTaxCodesForNormalRefund.includes(taxCode))) {
-                            nonRefundableTaxes += 'TAX ' + amount.toFixed(2) + taxCode + '\n';
-                        } else {
-                            refundableTaxes += 'TAX ' + amount.toFixed(2) + taxCode + '\n';
-                            refundAmount += amount;
-                        }
-                    }
-                }
-            }
-
-            // Calculate the refund amount based on the refund type
-            if (refundType === "normal") {
-                refundAmount = fareAmount + refundAmount - penaltyAmount;
-            }
-
-            // Display the refundable and non-refundable tax breakdowns
-            document.getElementById("refundableTaxes").textContent = refundableTaxes;
-            document.getElementById("nonRefundableTaxes").textContent = nonRefundableTaxes;
-
-            // Display the refund amount
-            document.getElementById("refundAmount").textContent = "Refund Amount: " + refundAmount.toFixed(2);
-        }
+       
     </script>
 </body>
 </html>
