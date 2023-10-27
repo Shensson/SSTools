@@ -100,15 +100,21 @@
                             <br>
                             <div class="content">
                                 <p>Dear Team,</p>
+                                <br>
                                 <p>PNR:</p>
                                 <p>TKT: </p>
                                 <p>NAME: </p>
+                                <br>
                                 <p>Please process a ${refundType} refund per following breakdown:</p>
-                                <p>Refundable Taxes Breakdown:</p>
+                                <br>
+                                <p>Refundable Taxes:</p>
                                 <pre>${document.getElementById("refundableTaxes").textContent}</pre>
-                                <p>Non-Refundable Taxes Breakdown:</p>
+                                <br>
+                                <p>Non-Refundable Taxes:</p>
                                 <pre>${document.getElementById("nonRefundableTaxes").textContent}</pre>
-                                <p class="refund-amount">Refund Amount: ${refundAmount}</p>
+                                <p class="refund-amount">${refundAmount}</p>
+                                <br>
+                                <p>Thank you in advance.</p>
                             </div>
                         </div>
                     </body>
