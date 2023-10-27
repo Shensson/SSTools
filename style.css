@@ -22,6 +22,7 @@ body{
 .warning{
     position: absolute;
     top: 20px;
+    right: 0;
     width: 600px;
     color: #3D5A80;
     margin-bottom: 50px;
