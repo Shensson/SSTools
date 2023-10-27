@@ -1,4 +1,4 @@
- var nonRefundableTaxCodesForTaxRefund = ["YQ", "YR", "US", "XF", "ZP", ];
+ var nonRefundableTaxCodesForTaxRefund = ["YQ", "YR", "US", "XF", "ZP", "PI", "S4", "EQ", "E2", "ED", "L8", "O7", "I6", "N7", "N9", "PE", "CR", "BU", "DI", "FV", "FW", "BZ", "XL", "PH", "E3", "PA", "OU", "K3", "J9", "ZP"];
         var nonRefundableTaxCodesForNormalRefund = ["PI", "S4", "EQ", "E2", "ED", "L8", "O7", "I6", "N7", "N9", "PE", "CR", "BU", "DI", "FV", "FW", "BZ", "XL", "PH", "E3", "PA", "OU", "K3", "J9", "ZP"];
 
         function calculateRefund() {
@@ -64,4 +64,7 @@
 
             // Display the refund amount
             document.getElementById("refundAmount").textContent = "Refund Amount: " + refundAmount.toFixed(2);
+            var refundAmountText = "Refund Amount: " + refundAmount.toFixed(2);
+            var coloredRefundAmountText = refundAmountText.replace(/\d+\.\d+/, '<span style="color: #EE6C4D;">$&</span>');
+            document.getElementById("refundAmount").innerHTML = coloredRefundAmountText;
         }
