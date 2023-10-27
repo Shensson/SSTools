@@ -16,6 +16,8 @@ body{
     width: 100px;
     height: 100vh;
     position: absolute;
+    left: 0;
+    top: 0;
 }
 .warning{
     position: absolute;

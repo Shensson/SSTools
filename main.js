@@ -1,5 +1,11 @@
- var nonRefundableTaxCodesForTaxRefund = ["YQ", "YR", "US", "XF", "ZP", "PI", "S4", "EQ", "E2", "ED", "L8", "O7", "I6", "N7", "N9", "PE", "CR", "BU", "DI", "FV", "FW", "BZ", "XL", "PH", "E3", "PA", "OU", "K3", "J9", "ZP"];
-        var nonRefundableTaxCodesForNormalRefund = ["PI", "S4", "EQ", "E2", "ED", "L8", "O7", "I6", "N7", "N9", "PE", "CR", "BU", "DI", "FV", "FW", "BZ", "XL", "PH", "E3", "PA", "OU", "K3", "J9", "ZP"];
+ var nonRefundableTaxCodesForTaxRefund = ["YQ", "YR", "US", "XF", "PI", "S4", "EQ", "E2", "ED", "L8", "O7", "I6", "N7", "N9", "PE", "CR", "BU", "DI", "FV", "FW", "BZ", "XL", "PH", "E3", "PA", "OU", "K3", "J9", "ZP"];
+        var nonRefundableTaxCodesForNormalRefund = ["PI", "S4", "EQ", "E2", "ED", "L8", "O7", "I6", "N7", "N9", "PE", "CR", "BU", "DI", "FV", "FW", "BZ", "XL", "PH", "E3", "PA", "OU", "K3", "J9",];
+
+        var selectedRefundType = 'tax'; // Default to 'tax'
+
+        function setRefundType(refundType) {
+            selectedRefundType = refundType;
+        }
 
         function calculateRefund() {
             // Get the breakdown from the user input
@@ -67,4 +73,52 @@
             var refundAmountText = "Refund Amount: " + refundAmount.toFixed(2);
             var coloredRefundAmountText = refundAmountText.replace(/\d+\.\d+/, '<span style="color: #EE6C4D;">$&</span>');
             document.getElementById("refundAmount").innerHTML = coloredRefundAmountText;
+        }
+        
+
+        function generateEmailTemplate() {
+            // Calculate the refund first
+            calculateRefund();
+        
+            // Get the values
+            var breakdown = document.getElementById("breakdown").value;
+            var refundType = selectedRefundType;
+            var refundAmount = document.getElementById("refundAmount").textContent;
+        
+            // Check if the refund type is "tax"
+            if (refundType === "tax") {
+                // Create an email template with your desired layout and styling
+                var emailTemplate = `
+                    <html>
+                    <head>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <div class="subject">
+                                <p>[SS]Tax Refund Request PNR: ${refundAmount} USD/CAD</p>
+                            </div>
+                            <br>
+                            <div class="content">
+                                <p>Dear Team,</p>
+                                <p>PNR:</p>
+                                <p>TKT: </p>
+                                <p>NAME: </p>
+                                <p>Please process a ${refundType} refund per following breakdown:</p>
+                                <p>Refundable Taxes Breakdown:</p>
+                                <pre>${document.getElementById("refundableTaxes").textContent}</pre>
+                                <p>Non-Refundable Taxes Breakdown:</p>
+                                <pre>${document.getElementById("nonRefundableTaxes").textContent}</pre>
+                                <p class="refund-amount">Refund Amount: ${refundAmount}</p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `;
+        
+                // Display the email template in the container div
+                document.getElementById("emailTemplateContainer").innerHTML = emailTemplate;
+            } else {
+                // Handle the case where the refund type is not "tax"
+                alert("Email template generation is allowed only for tax refunds.");
+            }
         }
