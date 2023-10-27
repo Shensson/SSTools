@@ -158,5 +158,7 @@
                     </body>
                     </html>
                 `;
+
+                document.getElementById("emailTemplateContainer").innerHTML = emailTemplate;
             }
         }
