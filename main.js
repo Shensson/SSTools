@@ -75,7 +75,9 @@
             document.getElementById("refundAmount").innerHTML = coloredRefundAmountText;
         }
         
-
+        if (refundType === "tax"){
+            
+        }
         function generateEmailTemplate() {
             // Calculate the refund first
             calculateRefund();
@@ -124,7 +126,37 @@
                 // Display the email template in the container div
                 document.getElementById("emailTemplateContainer").innerHTML = emailTemplate;
             } else {
-                // Handle the case where the refund type is not "tax"
-                alert("Email template generation is allowed only for tax refunds.");
+                var emailTemplate = `
+                    <html>
+                    <head>
+                    </head>
+                    <body>
+                        <div style="display: none" class="container">
+                            <div class="subject">
+                                <p>[SS] Refund Request PNR: ${refundAmount} USD/CAD</p>
+                            </div>
+                            <br>
+                            <div class="content">
+                                <p>Dear Team,</p>
+                                <br>
+                                <p>PNR:</p>
+                                <p>TKT: </p>
+                                <p>NAME: </p>
+                                <br>
+                                <p>Please process a refund per following breakdown:</p>
+                                <br>
+                                <p>Net price: </p>
+                                <pre>${document.getElementById("refundableTaxes").textContent}</pre>
+                                <br>
+                                <p>Non-Refundable Taxes:</p>
+                                <pre>${document.getElementById("nonRefundableTaxes").textContent}</pre>
+                                <p class="refund-amount">${refundAmount}</p>
+                                <br>
+                                <p>Thank you in advance.</p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `;
             }
         }
