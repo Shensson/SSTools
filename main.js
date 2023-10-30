@@ -75,24 +75,26 @@
             document.getElementById("refundAmount").innerHTML = coloredRefundAmountText;
         }
         
-        if (refundType === "tax"){
-            
-        }
         function generateEmailTemplate() {
             // Calculate the refund first
             calculateRefund();
-        
-            // Get the values
-            var breakdown = document.getElementById("breakdown").value;
-            var refundType = selectedRefundType;
-            var refundAmount = document.getElementById("refundAmount").textContent;
-        
-            // Check if the refund type is "tax"
+            
+            // Get the selected refund type
+            var refundType = document.getElementById("refundType").value;
+             var breakdown = document.getElementById("breakdown").value;
+                var refundAmount = document.getElementById("refundAmount").textContent;
+                var penaltyInput = document.getElementById("penaltyInput");
+                var penaltyAmount = parseFloat(penaltyInput.value) || 0;;
+                var netAmount = fareAmount + refundAmount
+            
             if (refundType === "tax") {
-                // Create an email template with your desired layout and styling
+                // Create an email template with your original layout and styling
                 var emailTemplate = `
                     <html>
                     <head>
+                        <style>
+                            /* Add your CSS styling here */
+                        </style>
                     </head>
                     <body>
                         <div class="container">
@@ -107,7 +109,7 @@
                                 <p>TKT: </p>
                                 <p>NAME: </p>
                                 <br>
-                                <p>Please process a ${refundType} refund per following breakdown:</p>
+                                <p>Please process a ${refundType} refund per the following breakdown:</p>
                                 <br>
                                 <p>Refundable Taxes:</p>
                                 <pre>${document.getElementById("refundableTaxes").textContent}</pre>
@@ -122,43 +124,47 @@
                     </body>
                     </html>
                 `;
-        
+                
                 // Display the email template in the container div
                 document.getElementById("emailTemplateContainer").innerHTML = emailTemplate;
-            } else {
+            } else if (refundType === "normal") {
+                // Create an email template for normal refunds
                 var emailTemplate = `
-                    <html>
-                    <head>
-                    </head>
-                    <body>
-                        <div style="display: none" class="container">
-                            <div class="subject">
-                                <p>[SS] Refund Request PNR: ${refundAmount} USD/CAD</p>
-                            </div>
-                            <br>
-                            <div class="content">
-                                <p>Dear Team,</p>
-                                <br>
-                                <p>PNR:</p>
-                                <p>TKT: </p>
-                                <p>NAME: </p>
-                                <br>
-                                <p>Please process a refund per following breakdown:</p>
-                                <br>
-                                <p>Net price: </p>
-                                <pre>${document.getElementById("refundableTaxes").textContent}</pre>
-                                <br>
-                                <p>Non-Refundable Taxes:</p>
-                                <pre>${document.getElementById("nonRefundableTaxes").textContent}</pre>
-                                <p class="refund-amount">${refundAmount}</p>
-                                <br>
-                                <p>Thank you in advance.</p>
-                            </div>
-                        </div>
-                    </body>
-                    </html>
-                `;
-
+                <html>
+            <head>
+                <style>
+                    /* Add your CSS styling here */
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="subject">
+                        <p>[SS]In-house/Monetary Refund Request PNR: ${refundAmount} USD/CAD</p>
+                    </div>
+                    <br>
+                    <div class="content">
+                        <p>Dear Team,</p>
+                        <br>
+                        <p>PNR:</p>
+                        <p>TKT: </p>
+                        <p>NAME: </p>
+                        <br>
+                        <p>Please process an in-house/monetary refund per following breakdown:</p>
+                        <br>
+                        <p>Net Price: ${netAmount} </p>
+                        <p>Penalty: ${penaltyAmount}
+                        <p>Non Ref taxes: <!-- Insert the non-refundable taxes breakdown here --> </p>
+                        <p>Amount to be refunded: ${refundAmount}</p>
+                        <br>
+                        <p>Thank you in advance.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            `;
                 document.getElementById("emailTemplateContainer").innerHTML = emailTemplate;
+            } else {
+                // Clear the email template container for other refund types
+                document.getElementById("emailTemplateContainer").innerHTML = "";
             }
         }
